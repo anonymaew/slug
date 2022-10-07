@@ -1,7 +1,5 @@
 import cheerio from 'cheerio';
-import { data } from 'cheerio/lib/api/attributes';
-import { NextApiRequest, NextApiResponse } from 'next';
-import puppeteer from 'puppeteer';
+import chromium from 'chrome-aws-lambda';
 
 import { Category, DiningLists, Location, Meal, Menu } from '../../interfaces/diningList';
 
@@ -10,9 +8,12 @@ const homePageLink = "https://nutrition.sa.ucsc.edu/location.aspx";
 
 const Scrape = async (): Promise<DiningLists> => {
   try {
-    const browser = await puppeteer.launch({
-      headless: false,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    const browser = await chromium.puppeteer.launch({
+      args: chromium.args,
+      executablePath: await chromium.executablePath,
+      headless: chromium.headless,
+      defaultViewport: chromium.defaultViewport,
+      ignoreHTTPSErrors: true,
     });
 
     const locationsPage = await browser.newPage();
