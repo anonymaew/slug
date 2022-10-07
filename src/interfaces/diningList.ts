@@ -1,4 +1,4 @@
-export interface Lists {
+export interface DiningLists {
   locations: Location[];
   updated: string;
 }
@@ -25,6 +25,7 @@ export interface Category {
 }
 
 export interface Menu {
+  [x: string]: any;
   name: string;
   allergens: Allergen[];
   price: number | null;
