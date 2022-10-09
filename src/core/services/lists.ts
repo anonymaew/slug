@@ -11,11 +11,12 @@ const Scrape = async (): Promise<DiningLists> => {
     const browser = await puppeteer.launch({
       headless: true,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      timeout: 0,
     });
 
     const locationsPage = await browser.newPage();
     await locationsPage.goto(homePageLink, {
-      waitUntil: "networkidle2",
+      waitUntil: "domcontentloaded",
     });
 
     const locationsContent = await locationsPage.content();
@@ -29,7 +30,7 @@ const Scrape = async (): Promise<DiningLists> => {
         const locationLink = domain + aTag.attr("href");
         const locationPage = await browser.newPage();
         await locationPage.goto(locationLink, {
-          waitUntil: "networkidle2",
+          waitUntil: "domcontentloaded",
         });
         const content = await locationPage.content();
         const $ = cheerio.load(content);
