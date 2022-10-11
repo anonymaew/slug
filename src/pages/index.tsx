@@ -1,104 +1,56 @@
+import Head from 'next/head';
 import { useEffect, useState } from 'react';
 
 import { Listbox } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
 
+import AllergenFilterModal from '../components/allergenFilterModal';
+import DiningMenu from '../components/diningMenu';
+import Selectors from '../components/selectors';
+import { AllergenFilter, DefaultAllergens } from '../interfaces/allergenFilter';
 import { DiningLists, Location } from '../interfaces/diningList';
 import Scrape from '../lib/lists';
 
 const Page = (props: { data: DiningLists; built: string }) => {
-  const [day, setDay] = useState("Today");
+  const [day, setDay] = useState<string>("Today");
   const [location, setLocation] = useState<Location>(props.data.locations[0]);
+  const [allergens, setAllergens] =
+    useState<AllergenFilter[]>(DefaultAllergens);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   return (
     <div className="max-w-xl p-2 mx-auto">
-      <div className="sticky z-10 w-full top-2 ">
-        <Listbox value={location} onChange={setLocation}>
-          <Listbox.Button className="relative flex items-center justify-between w-full p-2 text-lg font-bold text-left border-black rounded-lg shadow-lg cursor-pointer sm:px-4 bg-amber-900 text-amber-100 border-1 border-opacity-5 focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300">
-            <span className="">{location.name}</span>
-            <span className="">
-              <ChevronDownIcon className="w-5 h-5"></ChevronDownIcon>
-            </span>
-          </Listbox.Button>
-          <Listbox.Options className="absolute w-full mt-2 text-base bg-white border-black rounded-md shadow-lg border-1 border-opacity-10 focus:outline-none">
-            {props.data.locations
-              .filter((locationItem) => locationItem.name !== location.name)
-              .map((locationItem, locationIndex) => (
-                <Listbox.Option
-                  key={locationIndex}
-                  className="relative p-2 text-gray-900 cursor-default select-none hover:bg-amber-100 hover:text-amber-900"
-                  value={locationItem}
-                >
-                  <span className="">{locationItem.name}</span>
-                </Listbox.Option>
-              ))}
-          </Listbox.Options>
-        </Listbox>
-      </div>
-      <main className="my-4 text-sm sm:text-base">
-        {location.days
-          .filter((dayItem) => dayItem.name === day)
-          .map((day, dayIndex) => {
-            return (
-              <div key={dayIndex}>
-                {day.meals.map((meal, mealIndex) => {
-                  return (
-                    <div
-                      key={mealIndex}
-                      className="w-full p-2 pt-0 my-2 border border-black rounded-lg shadow-md sm:pt-2 sm:p-4 border-opacity-10"
-                    >
-                      <h3 className="sticky my-2 text-lg font-bold text-center rounded-md shadow-sm top-16 bg-amber-100 text-amber-900">
-                        {meal.name}
-                      </h3>
-                      {meal.categories.map((category, categoryIndex) => {
-                        return (
-                          <div
-                            key={categoryIndex}
-                            className="mt-1 border-t border-black border-opacity-20"
-                          >
-                            <p className="italic ">{category.name}</p>
-                            <div className="ml-4">
-                              {category.menus.map((menu, menuIndex) => {
-                                return (
-                                  <li
-                                    key={menuIndex}
-                                    className="flex justify-between"
-                                  >
-                                    <span className="">{menu.name}</span>
-
-                                    <span className="">
-                                      {menu.allergens.map(
-                                        (allergen, allergenIndex) => {
-                                          return (
-                                            <span key={allergenIndex}>
-                                              <img
-                                                className="inline w-4 mr-1 sm:mr-2 sm:w-5 aspect-square"
-                                                src={`/icons/${allergen.name}.gif`}
-                                                alt={allergen.name}
-                                              />
-                                            </span>
-                                          );
-                                        }
-                                      )}
-                                      {menu.price !== null && (
-                                        <span className="font-bold text-green-700">
-                                          {menu.price.toFixed(2)}
-                                        </span>
-                                      )}
-                                    </span>
-                                  </li>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
+      <Head>
+        <title>UCSC Dining Menu</title>
+        <meta
+          name="description"
+          content="A better and faster solution for UCSC Dining Menu lookup"
+        />
+      </Head>
+      <Selectors
+        data={props.data}
+        location={location}
+        setLocation={setLocation}
+      />
+      <main className="min-h-screen my-4 text-sm sm:text-base">
+        <button
+          className="px-2 font-bold underline transition duration-200 ease-in-out rounded-full text-amber-900 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-amber-500 w-fit"
+          onClick={() => setModalOpen(true)}
+        >
+          Allergen filter
+        </button>
+        <DiningMenu
+          meals={
+            location.days.find((dayItem) => dayItem.name === day)?.meals || []
+          }
+          filters={allergens}
+        />
+        <AllergenFilterModal
+          modalOpen={modalOpen}
+          setModalOpen={setModalOpen}
+          allergens={allergens}
+          onAllergenChange={setAllergens}
+        />
       </main>
 
       <footer className="text-sm text-gray-600">
