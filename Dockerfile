@@ -28,7 +28,7 @@ COPY package*.json ./
 COPY yarn.lock ./
 
 # Install dependencies
-RUN yarn
+RUN yarn install
 
 # Copy app
 COPY . .
