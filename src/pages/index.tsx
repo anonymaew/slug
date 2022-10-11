@@ -45,7 +45,7 @@ const Page = (props: { data: DiningLists; built: string }) => {
                   return (
                     <div
                       key={mealIndex}
-                      className="w-full p-2 my-2 border border-black rounded-lg shadow-md sm:p-4 border-opacity-10"
+                      className="w-full p-2 pt-0 my-2 border border-black rounded-lg shadow-md sm:pt-2 sm:p-4 border-opacity-10"
                     >
                       <h3 className="sticky my-2 text-lg font-bold text-center rounded-md shadow-sm top-16 bg-amber-100 text-amber-900">
                         {meal.name}
@@ -72,13 +72,18 @@ const Page = (props: { data: DiningLists; built: string }) => {
                                           return (
                                             <span key={allergenIndex}>
                                               <img
-                                                className="inline w-4 h-4 mx-1"
+                                                className="inline w-4 mr-1 sm:mr-2 sm:w-5 aspect-square"
                                                 src={`/icons/${allergen.name}.gif`}
                                                 alt={allergen.name}
                                               />
                                             </span>
                                           );
                                         }
+                                      )}
+                                      {menu.price !== null && (
+                                        <span className="font-bold text-green-700">
+                                          {menu.price.toFixed(2)}
+                                        </span>
                                       )}
                                     </span>
                                   </li>

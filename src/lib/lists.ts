@@ -11,8 +11,7 @@ const Scrape = async (): Promise<DiningLists> => {
     const browser = await puppeteer.launch({
       headless: true,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
-      executablePath: "/usr/bin/chromium-browser",
-      timeout: 0,
+      executablePath: process.env.CHROMIUM_BIN || "/usr/bin/chromium-browser",
     });
 
     const locationsPage = await browser.newPage();
@@ -106,6 +105,12 @@ const Scrape = async (): Promise<DiningLists> => {
         "en-US"
       )} ${new Date().toLocaleTimeString("en-US")}`,
     };
+
+    //fix mysterious bug of double first recipes
+    for (let location of result.locations)
+      for (let day of location.days)
+        for (let meal of day.meals)
+          if (meal.categories.length > 1) meal.categories[0].menus.splice(1, 2);
 
     for (let location of result.locations) {
       for (let day of location.days) {
