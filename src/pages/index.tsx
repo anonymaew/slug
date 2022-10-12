@@ -1,15 +1,12 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
-
-import { Listbox } from '@headlessui/react';
-import { ChevronDownIcon } from '@heroicons/react/24/solid';
+import { useState } from 'react';
 
 import AllergenFilterModal from '../components/allergenFilterModal';
 import DiningMenu from '../components/diningMenu';
 import Selectors from '../components/selectors';
 import { AllergenFilter, DefaultAllergens } from '../interfaces/allergenFilter';
 import { DiningLists, Location } from '../interfaces/diningList';
-import Scrape from '../lib/lists';
+import diningList from '../lib/diningLists';
 
 const Page = (props: { data: DiningLists; built: string }) => {
   const [day, setDay] = useState<string>("Today");
@@ -62,8 +59,7 @@ const Page = (props: { data: DiningLists; built: string }) => {
 };
 
 export const getStaticProps = async () => {
-  const data = await Scrape();
-  console.log(data.locations.length);
+  const data = await diningList();
 
   return {
     props: {

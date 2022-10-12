@@ -1,25 +1,41 @@
 import cheerio from 'cheerio';
-import puppeteer from 'puppeteer-core';
 
 import { Category, DiningLists, Location, Meal, Menu } from '../interfaces/diningList';
 
 const domain = "https://nutrition.sa.ucsc.edu/";
 const homePageLink = "https://nutrition.sa.ucsc.edu/location.aspx";
 
-const Scrape = async (): Promise<DiningLists> => {
+const fetchContent = async (url: string) => {
+  const response = await fetch(url, {
+    headers: {
+      accept:
+        "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+      "accept-language": "th-TH,th;q=0.9",
+      "cache-control": "no-cache",
+      pragma: "no-cache",
+      "sec-ch-ua":
+        '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": '"macOS"',
+      "sec-fetch-dest": "document",
+      "sec-fetch-mode": "navigate",
+      "sec-fetch-site": "none",
+      "sec-fetch-user": "?1",
+      "upgrade-insecure-requests": "1",
+      cookie:
+        "WebInaCartLocation=; WebInaCartDates=; WebInaCartMeals=; WebInaCartRecipes=; WebInaCartQtys=",
+    },
+    referrerPolicy: "strict-origin-when-cross-origin",
+    body: null,
+    method: "GET",
+  });
+  const content = await response.text();
+  return content;
+};
+
+const diningList = async (): Promise<DiningLists> => {
   try {
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-      executablePath: process.env.CHROMIUM_BIN || "/usr/bin/chromium-browser",
-    });
-
-    const locationsPage = await browser.newPage();
-    await locationsPage.goto(homePageLink, {
-      waitUntil: "domcontentloaded",
-    });
-
-    const locationsContent = await locationsPage.content();
+    const locationsContent = await fetchContent(homePageLink);
     const $m = cheerio.load(locationsContent);
 
     const locations = $m(".locations")
@@ -28,12 +44,8 @@ const Scrape = async (): Promise<DiningLists> => {
         const aTag = $m(locationElement).find("a");
         const locationName = aTag.text();
         const locationLink = domain + aTag.attr("href");
-        const locationPage = await browser.newPage();
-        await locationPage.goto(locationLink, {
-          waitUntil: "domcontentloaded",
-        });
-        const content = await locationPage.content();
-        const $ = cheerio.load(content);
+        const locationContent = await fetchContent(locationLink);
+        const $ = cheerio.load(locationContent);
 
         return {
           name: locationName,
@@ -110,7 +122,7 @@ const Scrape = async (): Promise<DiningLists> => {
     for (let location of result.locations)
       for (let day of location.days)
         for (let meal of day.meals)
-          if (meal.categories.length > 1) meal.categories[0].menus.splice(1, 2);
+          if (meal.categories.length > 1) meal.categories[0].menus.splice(1, 1);
 
     for (let location of result.locations) {
       for (let day of location.days) {
@@ -131,7 +143,6 @@ const Scrape = async (): Promise<DiningLists> => {
       }
     }
 
-    await browser.close();
     return result;
   } catch (err) {
     console.log(err);
@@ -144,4 +155,4 @@ const Scrape = async (): Promise<DiningLists> => {
   }
 };
 
-export default Scrape;
+export default diningList;
