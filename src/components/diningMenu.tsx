@@ -40,9 +40,9 @@ const DiningMenu = (props: { meals: Meal[]; filters: AllergenFilter[] }) => {
   }, [props]);
 
   return (
-    <div className="text-base text-black sm:text-lg">
+    <div className="text-base sm:text-lg">
       {meals.length === 0 ? (
-        <p className="my-12 text-5xl font-black text-center text-gray-300">
+        <p className="my-12 text-5xl font-black text-center text-zinc-500">
           No menu available
         </p>
       ) : (
@@ -50,18 +50,18 @@ const DiningMenu = (props: { meals: Meal[]; filters: AllergenFilter[] }) => {
           return (
             <div
               key={mealIndex}
-              className="w-full p-2 pt-0 my-4 border border-black rounded-lg shadow-md sm:pt-2 sm:p-4 border-opacity-10"
+              className="w-full p-2 pt-0 my-4 bg-white border rounded-lg shadow-md border-zinc-300 dark:bg-zinc-800 dark:border-zinc-700 sm:pt-2 sm:p-4"
             >
-              <h3 className="sticky my-2 text-xl font-bold text-center rounded-md shadow-sm top-16 bg-amber-100 text-amber-900">
+              <h3 className="sticky my-2 text-lg font-bold text-center rounded-md shadow-sm sm:text-xl top-16 bg-amber-100 dark:bg-amber-900 text-amber-900 dark:text-amber-100">
                 {meal.name}
               </h3>
               {meal.categories.map((category, categoryIndex) => {
                 return (
                   <div
                     key={categoryIndex}
-                    className="mt-1 border-t border-black border-opacity-20"
+                    className="mt-1 border-t border-zinc-300 dark:border-zinc-700"
                   >
-                    <p className="italic ">{category.name}</p>
+                    <p className="italic">{category.name}</p>
                     <div className="mx-4">
                       {category.menus.map((menu, menuIndex) => {
                         return (
@@ -69,7 +69,7 @@ const DiningMenu = (props: { meals: Meal[]; filters: AllergenFilter[] }) => {
                             <span className="">{menu.name}</span>
                             <span className="">
                               {menu.price !== null && (
-                                <span className="font-bold text-green-700">
+                                <span className="font-bold text-green-700 dark:text-green-300">
                                   {menu.price.toFixed(2)}
                                 </span>
                               )}

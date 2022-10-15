@@ -32,7 +32,7 @@ const AllergenFilter = (props: {
           })
         }
         className={`${
-          props.data.checked ? "bg-amber-500" : "bg-gray-200"
+          props.data.checked ? "bg-amber-500" : "bg-zinc-200 dark:bg-zinc-700"
         } relative inline-flex items-center h-6 rounded-full w-11 transition duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus:outline-offset-2 focus:outline-amber-500`}
       >
         <span className="sr-only">Use setting</span>
@@ -55,7 +55,7 @@ const AllergenFilterModal = (props: {
   return (
     <Dialog
       as="div"
-      className="fixed inset-0 z-10 overflow-y-auto"
+      className="fixed inset-0 z-10 overflow-y-auto text-black dark:text-zinc-100"
       open={props.modalOpen}
       onClose={() => props.setModalOpen(false)}
     >
@@ -65,19 +65,16 @@ const AllergenFilterModal = (props: {
           &#8203;
         </span>
 
-        <div className="inline-block w-full max-w-xs p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-          <Dialog.Title
-            as="h2"
-            className="text-xl font-bold leading-6 text-gray-900"
-          >
+        <div className="inline-block w-full max-w-xs p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl dark:bg-zinc-800 rounded-2xl">
+          <Dialog.Title as="h2" className="text-xl font-bold leading-6">
             Allergen Filter
           </Dialog.Title>
 
           <div className="my-4">
-            <h3 className="text-lg border-b border-black border-opacity-20">
+            <h3 className="text-lg border-b border-zinc-300 dark:border-zinc-700">
               Preference
             </h3>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-zinc-500">
               Only includes menu with the preference
             </p>
             {props.allergens
@@ -93,10 +90,10 @@ const AllergenFilterModal = (props: {
               })}
           </div>
           <div className="mt-4">
-            <h3 className="text-lg border-b border-black border-opacity-20">
+            <h3 className="text-lg border-b border-zinc-300 dark:border-zinc-700">
               Allergen
             </h3>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-zinc-500">
               Filter out menu with the allergen
             </p>
             {props.allergens
@@ -115,7 +112,7 @@ const AllergenFilterModal = (props: {
           <div className="mt-4">
             <button
               type="button"
-              className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white rounded-md bg-amber-900 hover:bg-amber-800 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+              className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white rounded-md dark:text-black bg-amber-900 dark:hover:bg-amber-200 dark:bg-amber-100 hover:bg-amber-800 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
               onClick={() => props.setModalOpen(false)}
             >
               Close

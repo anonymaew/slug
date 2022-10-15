@@ -52,7 +52,7 @@ const diningList = async (): Promise<DiningLists> => {
           days: ["Today"].map((day) => {
             return {
               name: day,
-              date: new Date().toLocaleDateString("en-US"),
+              date: $(".shortmenutitle").text().split(" ").slice(2).join(" "),
               meals: $("body > table:nth-child(4) > tbody > tr")
                 .toArray()
                 .map((mealElement, i) => {
@@ -113,9 +113,7 @@ const diningList = async (): Promise<DiningLists> => {
       });
     const result = {
       locations: await Promise.all(locations),
-      updated: `${new Date().toLocaleDateString(
-        "en-US"
-      )} ${new Date().toLocaleTimeString("en-US")}`,
+      updated: Date.now(),
     };
 
     //fix mysterious bug of double first recipes
@@ -148,9 +146,7 @@ const diningList = async (): Promise<DiningLists> => {
     console.log(err);
     return {
       locations: [{ name: "error", days: [] }],
-      updated: `${new Date().toLocaleDateString(
-        "en-US"
-      )} ${new Date().toLocaleTimeString("en-US")}`,
+      updated: Date.now(),
     };
   }
 };

@@ -1,6 +1,6 @@
 export interface DiningLists {
   locations: Location[];
-  updated: string;
+  updated: number;
 }
 
 export interface Location {
