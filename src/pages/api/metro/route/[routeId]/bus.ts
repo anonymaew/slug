@@ -4,6 +4,7 @@ import { Bus } from '../../../../../interfaces/metroLists';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<Bus[]>) => {
   const { routeId } = req.query as { routeId: string };
+  const { shortName } = req.query;
 
   const response = await fetch(
     `https://cruzmetro.com/Route/${routeId}/Vehicles`
@@ -12,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Bus[]>) => {
   const result = data.map((item: any) => {
     return {
       id: item.ID,
-      heading: item.Heading,
+      name: shortName || "",
       position: {
         lat: item.Latitude,
         lng: item.Longitude,

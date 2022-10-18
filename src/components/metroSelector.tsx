@@ -1,38 +1,41 @@
 import { Dispatch, SetStateAction } from 'react';
 
-import { RadioGroup } from '@headlessui/react';
+import { Switch } from '@headlessui/react';
 
 import { MetroRoute } from '../interfaces/metroLists';
 
 const MetroSelector = (props: {
   data: MetroRoute[];
-  route: MetroRoute | undefined;
-  setRoute: Dispatch<SetStateAction<MetroRoute | undefined>>;
+  selectedRoutes: number[];
+  setSelectedRoutes: Dispatch<SetStateAction<number[]>>;
 }) => {
   return (
     <div className="fixed top-0 left-0 z-10 w-full p-4 overflow-auto no-scrollbar">
-      <div className="mx-auto w-fit">
-        <RadioGroup value={props.route} onChange={props.setRoute}>
-          <RadioGroup.Label className="sr-only">Route</RadioGroup.Label>
-          <div className="flex flex-row">
-            {props.data.map((routeItem, routeIndex) => (
-              <RadioGroup.Option
-                as="button"
-                key={routeIndex}
-                value={routeItem}
-                className={({ checked }) =>
-                  `p-1 px-4 m-1 text-base font-bold transition duration-200 ease-in-out rounded-lg shadow-lg cursor-pointer sm:text-lg focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 ${
-                    checked
-                      ? "sticky bg-indigo-900 dark:bg-indigo-100 text-indigo-100 dark:text-indigo-900"
-                      : "bg-indigo-100 text-indigo-900 dark:bg-indigo-900 dark:text-indigo-100 "
-                  }`
+      <div className="flex flex-row mx-auto w-fit">
+        {props.data.map((route, index) => (
+          <div key={route.id} className="">
+            <Switch
+              as="button"
+              checked={props.selectedRoutes.includes(index)}
+              onChange={(checked: boolean) => {
+                if (checked) {
+                  props.setSelectedRoutes([...props.selectedRoutes, index]);
+                } else {
+                  props.setSelectedRoutes(
+                    props.selectedRoutes.filter((i) => i !== index)
+                  );
                 }
-              >
-                {routeItem.name}
-              </RadioGroup.Option>
-            ))}
+              }}
+              className={`${
+                props.selectedRoutes.includes(index)
+                  ? "bg-indigo-900 text-indigo-100"
+                  : "bg-indigo-100 text-indigo-900"
+              } font-bold rounded-md p-4 py-1 mx-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
+            >
+              {route.name}
+            </Switch>
           </div>
-        </RadioGroup>
+        ))}
       </div>
     </div>
   );

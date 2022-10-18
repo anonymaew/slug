@@ -6,9 +6,9 @@ import { Bus, MetroRoute, MetroRouteDetail } from '../interfaces/metroLists';
 import MainLayout from '../layouts/main';
 
 const MetroPage = () => {
-  const Map = useMemo(
+  const MetroMap = useMemo(
     () =>
-      dynamic(() => import("../components/map"), {
+      dynamic(() => import("../components/metroMap"), {
         loading: () => <p>Loading...</p>,
         ssr: false,
       }),
@@ -16,8 +16,8 @@ const MetroPage = () => {
   );
 
   const [routes, setRoutes] = useState<MetroRoute[]>([]);
-  const [route, setRoute] = useState<MetroRoute>();
-  const [routeDetail, setRouteDetail] = useState<MetroRouteDetail>();
+  const [selectedRoutes, setSelectedRoutes] = useState<number[]>([]);
+  const [routesDetail, setRoutesDetail] = useState<MetroRouteDetail[]>();
   const [buses, setBuses] = useState<Bus[]>([]);
 
   useEffect(() => {
@@ -25,27 +25,43 @@ const MetroPage = () => {
       const res = await fetch("/api/metro/routes");
       const data = await res.json();
       setRoutes(data);
-      setRoute(data[1]);
+      setSelectedRoutes([1, 2, 4, 5, 6]);
     })();
   }, []);
 
   useEffect(() => {
     (async () => {
-      if (route) {
-        const detailResult = await fetch(`/api/metro/route/${route.id}/detail`);
-        const detailData = await detailResult.json();
-        setRouteDetail(detailData);
+      setRoutesDetail([]);
+      if (selectedRoutes && routes && routes.length > 0) {
+        const routesDetailPromise = selectedRoutes
+          .map((routeIndex) => routes[routeIndex].id)
+          .map(async (routeId): Promise<MetroRouteDetail> => {
+            const res = await fetch(`/api/metro/route/${routeId}/detail`);
+            const data = await res.json();
+            return data;
+          });
+        const routesDetail = await Promise.all(routesDetailPromise);
+
+        setRoutesDetail(routesDetail);
       }
     })();
-  }, [route]);
+  }, [selectedRoutes]);
 
   useEffect(() => {
     const getBuses = async () => {
-      if (route) {
-        const busResult = await fetch(`/api/metro/route/${route.id}/bus`);
-        const busData = await busResult.json();
+      if (selectedRoutes && routes && routes.length > 0) {
+        const busesDataPromise = selectedRoutes
+          .map((routeIndex) => routes[routeIndex])
+          .map(async (route): Promise<Bus[]> => {
+            const busResult = await fetch(
+              `/api/metro/route/${route.id}/bus?shortName=${route.name}`
+            );
+            const busData = await busResult.json();
+            return busData;
+          });
+        const busesData = (await Promise.all(busesDataPromise)).flat();
         setBuses((prevBus) => {
-          const newBus = busData.map((bus: Bus) => {
+          const newBus = busesData.map((bus: Bus) => {
             const prevBusItem = prevBus.find(
               (prevBusItem) => prevBusItem.id === bus.id
             );
@@ -59,12 +75,16 @@ const MetroPage = () => {
     getBuses();
     const interval = setInterval(async () => await getBuses(), 5000);
     return () => clearInterval(interval);
-  }, [route]);
+  }, [selectedRoutes]);
 
   return (
     <div>
-      <MetroSelector data={routes} route={route} setRoute={setRoute} />
-      <Map metroRouteDetail={routeDetail} metroBuses={buses} />
+      <MetroSelector
+        data={routes}
+        selectedRoutes={selectedRoutes}
+        setSelectedRoutes={setSelectedRoutes}
+      />
+      <MetroMap metroRoutesDetail={routesDetail} metroBuses={buses} />
     </div>
   );
 };

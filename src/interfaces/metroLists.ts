@@ -22,7 +22,7 @@ export interface Position {
 
 export interface Bus {
   id: number;
-  heading: number;
+  name: string;
   position: Position;
   prevPosition?: Position;
 }
