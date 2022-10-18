@@ -1,10 +1,7 @@
-export interface MetroRoute {
+export interface MetroRouteDetail {
   id: number;
   name: string;
   fullName: string;
-}
-
-export interface MetroRouteDetail {
   stops: MetroStop[];
   waypoints: Position[];
 }
@@ -22,6 +19,7 @@ export interface Position {
 
 export interface Bus {
   id: number;
+  route: string;
   name: string;
   position: Position;
   prevPosition?: Position;

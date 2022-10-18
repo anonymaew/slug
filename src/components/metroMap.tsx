@@ -13,7 +13,8 @@ import { LeafletTrackingMarker } from 'react-leaflet-tracking-marker';
 import { Bus, MetroRouteDetail } from '../interfaces/metroLists';
 
 const MetroMap = (props: {
-  metroRoutesDetail: MetroRouteDetail[] | undefined;
+  selectedRoutes: number[];
+  metroRoutesDetail: MetroRouteDetail[];
   metroBuses: Bus[];
 }) => {
   return (
@@ -26,77 +27,104 @@ const MetroMap = (props: {
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution="Map from <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a></br/>Available at <a href='https://github.com/anonymaew/ucsc-dining-menu'>GitHub</a> | Made by <a href='https://napatsc.com'>Napat Srichan</a>"
+          attribution="Map from <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> | Live data from <a href='https://cruzmetro.com'>CruzMetro</a><p style='text-align:right;'>Available at <a href='https://github.com/anonymaew/ucsc-dining-menu'>GitHub</a> | Made by <a href='https://napatsc.com'>Napat Srichan</a></p>"
         />
         <ZoomControl position="bottomleft" />
-        {props.metroRoutesDetail?.map((metroRouteDetail, index) => {
-          return (
-            <Fragment key={index}>
-              <Polyline
-                pathOptions={{
-                  color: "#075985",
-                  weight: 8,
-                }}
-                positions={
-                  metroRouteDetail.waypoints.map((waypoint) => [
-                    waypoint.lat,
-                    waypoint.lng,
-                  ]) || []
-                }
-              />
-              <Polyline
-                pathOptions={{
-                  color: "#38bdf8",
-                  weight: 4,
-                }}
-                positions={
-                  metroRouteDetail.waypoints.map((waypoint) => [
-                    waypoint.lat,
-                    waypoint.lng,
-                  ]) || []
-                }
-              />
-              {metroRouteDetail.stops.map((stopItem) => (
-                <CircleMarker
-                  key={stopItem.id}
-                  center={[stopItem.position.lat, stopItem.position.lng]}
+        {props.metroRoutesDetail
+          .filter((_, index) => props.selectedRoutes.includes(index))
+          .map((metroRouteDetail, index) => {
+            return (
+              <Fragment key={index}>
+                <Polyline
                   pathOptions={{
-                    fillColor: "#34d399",
-                    fillOpacity: 1,
-                    color: "#065f46",
-                    weight: 2,
+                    color: "#075985",
+                    weight: 8,
                   }}
-                  radius={6}
+                  positions={
+                    metroRouteDetail.waypoints.map((waypoint) => [
+                      waypoint.lat,
+                      waypoint.lng,
+                    ]) || []
+                  }
                 />
-              ))}
-            </Fragment>
-          );
-        })}
+                <Polyline
+                  pathOptions={{
+                    color: "#38bdf8",
+                    weight: 4,
+                  }}
+                  positions={
+                    metroRouteDetail.waypoints.map((waypoint) => [
+                      waypoint.lat,
+                      waypoint.lng,
+                    ]) || []
+                  }
+                />
+                {metroRouteDetail.stops.map((stopItem) => (
+                  <CircleMarker
+                    key={stopItem.id}
+                    center={[stopItem.position.lat, stopItem.position.lng]}
+                    pathOptions={{
+                      fillColor: "#34d399",
+                      fillOpacity: 1,
+                      color: "#065f46",
+                      weight: 2,
+                    }}
+                    radius={6}
+                  />
+                ))}
+              </Fragment>
+            );
+          })}
         {props.metroBuses.map((busItem) => (
-          <LeafletTrackingMarker
-            key={busItem.id}
-            position={[busItem.position.lat, busItem.position.lng]}
-            previousPosition={
-              busItem.prevPosition
-                ? [busItem.prevPosition.lat, busItem.prevPosition.lng]
-                : undefined
-            }
-            duration={5000}
-            icon={
-              new L.DivIcon({
-                className: "bus-icon",
-                html: renderToString(
-                  <div className="w-8 text-sm font-bold text-center text-indigo-900 align-middle bg-indigo-100 border-4 border-indigo-900 rounded-full aspect-square">
-                    {busItem.name}
-                  </div>
-                ),
-                iconSize: [32, 32],
-                iconAnchor: [16, 16],
-              })
-            }
-            rotationAngle={0}
-            zIndexOffset={10}
-          />
+          <Fragment key={busItem.id}>
+            <LeafletTrackingMarker
+              position={[busItem.position.lat, busItem.position.lng]}
+              previousPosition={
+                busItem.prevPosition
+                  ? [busItem.prevPosition.lat, busItem.prevPosition.lng]
+                  : undefined
+              }
+              duration={5000}
+              icon={
+                new L.DivIcon({
+                  className: "bus-icon",
+                  html: renderToString(
+                    <div className="relative w-8 aspect-square">
+                      <div className="absolute w-full h-full bg-indigo-500 rounded-full animate-ping"></div>
+                      <div className="absolute w-full h-full -rotate-45 bg-indigo-100 border-4 border-indigo-900 rounded-t-full rounded-bl-full"></div>
+                    </div>
+                  ),
+                  iconSize: [32, 32],
+                  iconAnchor: [16, 16],
+                })
+              }
+              rotationOrigin="center center"
+              zIndexOffset={10}
+            />
+            <LeafletTrackingMarker
+              position={[busItem.position.lat, busItem.position.lng]}
+              previousPosition={
+                busItem.prevPosition
+                  ? [busItem.prevPosition.lat, busItem.prevPosition.lng]
+                  : undefined
+              }
+              duration={5000}
+              icon={
+                new L.DivIcon({
+                  className: "bus-icon-text",
+                  html: renderToString(
+                    <div className="w-8 pt-2 text-xs font-black text-center text-indigo-900 aspect-square">
+                      {busItem.name}
+                    </div>
+                  ),
+                  iconSize: [32, 32],
+                  iconAnchor: [16, 16],
+                })
+              }
+              rotationAngle={0}
+              zIndexOffset={10}
+            />
+          </Fragment>
         ))}
       </MapContainer>
     </div>

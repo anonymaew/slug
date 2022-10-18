@@ -2,10 +2,10 @@ import { Dispatch, SetStateAction } from 'react';
 
 import { Switch } from '@headlessui/react';
 
-import { MetroRoute } from '../interfaces/metroLists';
+import { MetroRouteDetail } from '../interfaces/metroLists';
 
 const MetroSelector = (props: {
-  data: MetroRoute[];
+  data: MetroRouteDetail[];
   selectedRoutes: number[];
   setSelectedRoutes: Dispatch<SetStateAction<number[]>>;
 }) => {
@@ -18,19 +18,18 @@ const MetroSelector = (props: {
               as="button"
               checked={props.selectedRoutes.includes(index)}
               onChange={(checked: boolean) => {
-                if (checked) {
+                if (checked)
                   props.setSelectedRoutes([...props.selectedRoutes, index]);
-                } else {
+                else
                   props.setSelectedRoutes(
                     props.selectedRoutes.filter((i) => i !== index)
                   );
-                }
               }}
               className={`${
                 props.selectedRoutes.includes(index)
                   ? "bg-indigo-900 text-indigo-100"
                   : "bg-indigo-100 text-indigo-900"
-              } font-bold rounded-md p-4 py-1 mx-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
+              } font-bold rounded-md p-4 py-1 mx-1 focus:outline-none focus:outline-4 focus:outline-offset-2 focus:outline-indigo-500`}
             >
               {route.name}
             </Switch>
