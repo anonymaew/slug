@@ -12,11 +12,15 @@
     "@headlessui/react": "^1.7.3",
     "@heroicons/react": "^2.0.12",
     "cheerio": "^1.0.0-rc.12",
+    "leaflet": "^1.9.2",
     "next": "12.3.1",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-leaflet": "^4.1.0",
+    "react-leaflet-tracking-marker": "^1.0.15"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.0",
     "@types/node": "18.8.3",
     "@types/react": "18.0.21",
     "@types/react-dom": "18.0.6",

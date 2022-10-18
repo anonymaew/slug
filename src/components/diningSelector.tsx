@@ -5,7 +5,7 @@ import { ChevronDownIcon } from '@heroicons/react/24/solid';
 
 import { DiningLists, Location } from '../interfaces/diningList';
 
-const Selectors = (props: {
+const DiningSelector = (props: {
   data: DiningLists;
   location: Location;
   setLocation: Dispatch<SetStateAction<Location>>;
@@ -40,4 +40,4 @@ const Selectors = (props: {
     </div>
   );
 };
-export default Selectors;
+export default DiningSelector;
