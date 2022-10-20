@@ -6,9 +6,11 @@ const metroLists = async (): Promise<MetroRouteDetail[]> => {
   return Promise.all(
     routesData.map(async (item: any): Promise<MetroRouteDetail> => {
       const id = item.ID;
-      const stopResponse = await fetch(
-        `https://cruzmetro.com/Route/${id}/Directions`
-      );
+      const responses = await Promise.all([
+        fetch(`https://cruzmetro.com/Route/${id}/Directions`),
+        fetch(`https://cruzmetro.com/Route/${id}/Waypoints`),
+      ]);
+      const stopResponse = responses[0];
       const stopData = await stopResponse.json();
       const stops = stopData[0].Stops.map((item: any) => {
         return {
@@ -21,9 +23,7 @@ const metroLists = async (): Promise<MetroRouteDetail[]> => {
         };
       });
 
-      const waypointResponse = await fetch(
-        `https://cruzmetro.com/Route/${id}/Waypoints`
-      );
+      const waypointResponse = responses[1];
       const waypointData = await waypointResponse.json();
       const waypoints = waypointData[0].map((item: any) => {
         return {
