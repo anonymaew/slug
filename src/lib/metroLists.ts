@@ -1,6 +1,10 @@
+import { promises as fs } from 'fs';
+import { NextApiRequest, NextApiResponse } from 'next';
+import path from 'path';
+
 import { MetroRouteDetail } from '../interfaces/metroLists';
 
-const metroLists = async (): Promise<MetroRouteDetail[]> => {
+const metroListsFromWeb = async (): Promise<MetroRouteDetail[]> => {
   const routesResponse = await fetch("https://cruzmetro.com/Region/0/Routes");
   const routesData = await routesResponse.json();
   return Promise.all(
@@ -41,6 +45,12 @@ const metroLists = async (): Promise<MetroRouteDetail[]> => {
       };
     })
   );
+};
+
+const metroLists = async () => {
+  const jsonPath = path.join(process.cwd(), "/src/lib/metro.json");
+  const content = await fs.readFile(jsonPath, "utf-8");
+  return JSON.parse(content);
 };
 
 export default metroLists;
