@@ -13,7 +13,7 @@ const MainLayout = (props: { children: ReactNode }) => {
           />
         </Head>
         <main className="relative text-sm sm:text-base">{props.children}</main>
-        <footer className="absolute bottom-0 left-0 w-full p-4 text-sm text-center border-t text-zinc-500 border-zinc-300 dark:border-zinc-700">
+        <footer className="absolute bottom-0 left-0 w-full p-4 text-sm text-center border-t -z-10 text-zinc-500 border-zinc-300 dark:border-zinc-700">
           <p>
             Available at{" "}
             <a

@@ -2,7 +2,7 @@ import 'leaflet/dist/leaflet.css';
 
 import L, { divIcon } from 'leaflet';
 import { renderToHTML } from 'next/dist/server/render';
-import React, { Fragment, useEffect } from 'react';
+import React, { Dispatch, Fragment, SetStateAction, useEffect } from 'react';
 import { render } from 'react-dom';
 import { renderToString } from 'react-dom/server';
 import {
@@ -16,6 +16,8 @@ const MetroMap = (props: {
   selectedRoutes: number[];
   metroRoutesDetail: MetroRouteDetail[];
   metroBuses: Bus[];
+  stopFocus: number | undefined;
+  setStopFocus: Dispatch<SetStateAction<number | undefined>>;
 }) => {
   return (
     <div className="fixed top-0 left-0 w-screen h-screen">
@@ -64,12 +66,17 @@ const MetroMap = (props: {
                     key={stopItem.id}
                     center={[stopItem.position.lat, stopItem.position.lng]}
                     pathOptions={{
-                      fillColor: "#34d399",
+                      fillColor: "#fbbf24",
                       fillOpacity: 1,
-                      color: "#065f46",
+                      color: "#92400e",
                       weight: 2,
                     }}
-                    radius={6}
+                    radius={8}
+                    eventHandlers={{
+                      click: (e) => {
+                        props.setStopFocus(stopItem.id);
+                      },
+                    }}
                   />
                 ))}
               </Fragment>

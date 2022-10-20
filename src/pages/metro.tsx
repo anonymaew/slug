@@ -2,7 +2,8 @@ import dynamic from 'next/dynamic';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import MetroSelector from '../components/metroSelector';
-import { Bus, MetroRouteDetail } from '../interfaces/metroLists';
+import MetroStopDetail from '../components/metroStopDetail';
+import { Bus, MetroRouteDetail, StopDetail } from '../interfaces/metroLists';
 import MainLayout from '../layouts/main';
 import metroLists from '../lib/metroLists';
 
@@ -16,10 +17,24 @@ const MetroPage = (props: { routes: MetroRouteDetail[] }) => {
     []
   );
 
+  // useEffect(() => {
+  //   //download props.routes json
+  //   const string = JSON.stringify(props.routes);
+  //   var blob = new Blob([string], { type: "application/json" });
+  //   var url = URL.createObjectURL(blob);
+  //   var a = document.createElement("a");
+  //   a.download = "routes.json";
+  //   a.href = url;
+  //   a.textContent = "Download routes.json";
+  //   a.click();
+  // }, []);
+
   const [selectedRoutes, setSelectedRoutes] = useState<number[]>([
     1, 2, 4, 5, 6,
   ]);
   const [buses, setBuses] = useState<Bus[]>([]);
+  const [stopFocus, setStopFocus] = useState<number>();
+  const [stopDetail, setStopDetail] = useState<StopDetail>();
 
   useEffect(() => {
     const getBuses = async () => {
@@ -49,6 +64,19 @@ const MetroPage = (props: { routes: MetroRouteDetail[] }) => {
     return () => clearInterval(interval);
   }, [selectedRoutes]);
 
+  useEffect(() => {
+    if (!stopFocus) return setStopDetail(undefined);
+    const getStopDetail = async () => {
+      const stopDetailResponse = await fetch(`/api/metro/stop?id=${stopFocus}`);
+      const stopDetailData = await stopDetailResponse.json();
+      setStopDetail(stopDetailData);
+    };
+
+    getStopDetail();
+    const interval = setInterval(async () => await getStopDetail(), 20000);
+    return () => clearInterval(interval);
+  }, [stopFocus]);
+
   return (
     <div>
       <MetroSelector
@@ -60,7 +88,16 @@ const MetroPage = (props: { routes: MetroRouteDetail[] }) => {
         selectedRoutes={selectedRoutes}
         metroRoutesDetail={props.routes}
         metroBuses={buses}
+        stopFocus={stopFocus}
+        setStopFocus={setStopFocus}
       />
+      {stopDetail !== undefined && (
+        <MetroStopDetail
+          routes={props.routes}
+          stopDetail={stopDetail}
+          setStopFocus={setStopFocus}
+        />
+      )}
     </div>
   );
 };

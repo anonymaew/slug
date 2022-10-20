@@ -24,3 +24,10 @@ export interface Bus {
   position: Position;
   prevPosition?: Position;
 }
+export interface StopDetail {
+  id: number;
+  arrivals: {
+    bus: Bus;
+    minutes: number;
+  }[];
+}
