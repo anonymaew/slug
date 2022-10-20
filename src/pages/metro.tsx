@@ -22,10 +22,6 @@ const MetroPage = (props: { routes: MetroRouteDetail[] }) => {
   const [buses, setBuses] = useState<Bus[]>([]);
 
   useEffect(() => {
-    console.log(props.routes.find((route) => route.id === 5337)?.name || "x");
-  }, []);
-
-  useEffect(() => {
     const getBuses = async () => {
       const busesQuery = selectedRoutes
         .map((routeIndex) => props.routes[routeIndex].id)

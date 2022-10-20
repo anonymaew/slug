@@ -13,8 +13,10 @@ const handler = async (
       if (requestBody.SECRET !== undefined && requestBody.SECRET !== null)
         if (requestBody.SECRET === process.env.SECRET)
           try {
-            await res.revalidate("/dining");
-            await res.revalidate("/metro");
+            await Promise.all([
+              res.revalidate("/dining"),
+              res.revalidate("/metro"),
+            ]);
             return res.status(200).json({
               code: 200,
               message: "Revalidation successful",
