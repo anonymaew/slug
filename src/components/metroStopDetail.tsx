@@ -30,8 +30,8 @@ const MetroStopDetail = (props: {
               No bus currently
             </p>
           ) : (
-            props.stopDetail.arrivals.map((arrival) => (
-              <div className="py-2">
+            props.stopDetail.arrivals.map((arrival, index) => (
+              <div key={index} className="py-2">
                 <span className="p-4 py-1 mx-4 font-bold text-indigo-100 bg-indigo-900 rounded-md dark:bg-indigo-100 dark:text-indigo-900">
                   {arrival.bus.name}
                 </span>
