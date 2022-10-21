@@ -1,5 +1,6 @@
 name: cron daily update
 on:
+  workflow_dispatch:
   schedule:
     # 0:02 PST and 1:02 PDT
     - cron: 2 8 * * *
@@ -7,10 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-      - name: Revalidate
-        run: |
-          curl --request POST \
-            --url https://slug.napatsc.com/api/revalidate \
-            --header 'content-type: application/json' \
-            --data '{"SECRET": secrets.SECRET}'
+    name: Revalidate
+    run: |
+      curl --request POST \
+        --url https://slug.napatsc.com/api/revalidate \
+        --header 'content-type: application/json' \
+        --data '{"SECRET": $SECRET}'
