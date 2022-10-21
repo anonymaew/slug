@@ -11,7 +11,8 @@ jobs:
     steps:
       - name: Revalidate
         run: |
-          curl --request POST \
-            --url https://slug.napatsc.com/api/revalidate \
-            --header 'content-type: application/json' \
-            --data '{"SECRET": ${{secrets.SECRET}} }'
+          curl --location --request POST 'https://slug.napatsc.com/api/revalidate' \
+          --header 'Content-Type: application/json' \
+          --data-raw '{
+            "SECRET": ${{secrets.SECRET}}
+          }'
