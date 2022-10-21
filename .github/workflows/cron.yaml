@@ -14,5 +14,5 @@ jobs:
           curl --location --request POST 'https://slug.napatsc.com/api/revalidate' \
           --header 'Content-Type: application/json' \
           --data-raw '{
-            "SECRET": ${{secrets.SECRET}}
+            "SECRET": "${{secrets.SECRET}}"
           }'
