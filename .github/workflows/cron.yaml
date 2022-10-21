@@ -8,9 +8,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Revalidate
-    run: |
-      curl --request POST \
-        --url https://slug.napatsc.com/api/revalidate \
-        --header 'content-type: application/json' \
-        --data '{"SECRET": $SECRET}'
+    steps:
+      - name: Revalidate
+        run: |
+          curl --request POST \
+            --url https://slug.napatsc.com/api/revalidate \
+            --header 'content-type: application/json' \
+            --data '{"SECRET": $SECRET}'
