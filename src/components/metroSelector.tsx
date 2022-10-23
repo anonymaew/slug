@@ -27,8 +27,8 @@ const MetroSelector = (props: {
               }}
               className={`${
                 props.selectedRoutes.includes(index)
-                  ? "bg-indigo-900 text-indigo-100"
-                  : "bg-indigo-100 text-indigo-900"
+                  ? "bg-indigo-900 text-indigo-100 dark:bg-indigo-100 dark:text-indigo-900"
+                  : "bg-indigo-100 text-indigo-900 dark:bg-indigo-900 dark:text-indigo-100"
               } font-bold rounded-md p-4 py-1 mx-1 focus:outline-none focus:outline-4 focus:outline-offset-2 focus:outline-indigo-500`}
             >
               {route.name}

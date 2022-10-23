@@ -27,3 +27,14 @@ a {
   -ms-overflow-style: none; 
   scrollbar-width: none; 
 }
+
+/* dark mode leaflet*/
+@media (prefers-color-scheme: dark) {
+  .leaflet-tile {
+      filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.4) brightness(0.5) !important;
+  }
+
+  .leaflet-container {
+      background: #303030 !important;
+  }
+}

@@ -31,7 +31,6 @@ const MetroMap = (props: {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution="Map from <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> | Live data from <a href='https://cruzmetro.com'>CruzMetro</a><p style='text-align:right;'>Available at <a href='https://github.com/anonymaew/ucsc-dining-menu'>GitHub</a> | Made by <a href='https://napatsc.com'>Napat Srichan</a></p>"
         />
-        <ZoomControl position="bottomleft" />
         {props.metroRoutesDetail
           .filter((_, index) => props.selectedRoutes.includes(index))
           .map((metroRouteDetail, index) => {
@@ -51,7 +50,7 @@ const MetroMap = (props: {
                 />
                 <Polyline
                   pathOptions={{
-                    color: "#38bdf8",
+                    color: "#e0e7ff",
                     weight: 4,
                   }}
                   positions={
@@ -61,27 +60,35 @@ const MetroMap = (props: {
                     ]) || []
                   }
                 />
-                {metroRouteDetail.stops.map((stopItem) => (
-                  <CircleMarker
-                    key={stopItem.id}
-                    center={[stopItem.position.lat, stopItem.position.lng]}
-                    pathOptions={{
-                      fillColor: "#fbbf24",
-                      fillOpacity: 1,
-                      color: "#92400e",
-                      weight: 2,
-                    }}
-                    radius={8}
-                    eventHandlers={{
-                      click: (e) => {
-                        props.setStopFocus(stopItem.id);
-                      },
-                    }}
-                  />
-                ))}
               </Fragment>
             );
           })}
+        {props.metroRoutesDetail
+          .filter((_, index) => props.selectedRoutes.includes(index))
+          .flatMap((metroRouteDetail) => metroRouteDetail.stops)
+          .reduce((acc, stop) => {
+            if (acc.some((stop2) => stop2.id === stop.id)) return acc;
+            else return [...acc, stop];
+          }, [] as typeof props.metroRoutesDetail[0]["stops"])
+          .map((stopItem) => (
+            <CircleMarker
+              key={stopItem.id}
+              center={[stopItem.position.lat, stopItem.position.lng]}
+              pathOptions={{
+                fillColor:
+                  props.stopFocus === stopItem.id ? "#fbbf24" : "#818cf8",
+                fillOpacity: 1,
+                color: props.stopFocus === stopItem.id ? "#78350f" : "#075985",
+                weight: 2,
+              }}
+              radius={8}
+              eventHandlers={{
+                click: (e) => {
+                  props.setStopFocus(stopItem.id);
+                },
+              }}
+            />
+          ))}
         {props.metroBuses.map((busItem) => (
           <Fragment key={busItem.id}>
             <LeafletTrackingMarker
