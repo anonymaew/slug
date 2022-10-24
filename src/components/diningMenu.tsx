@@ -5,10 +5,9 @@ import { AllergenFilter } from '../interfaces/allergenFilter';
 import { Meal } from '../interfaces/diningList';
 
 const DiningMenu = (props: { meals: Meal[]; filters: AllergenFilter[] }) => {
-  const [meals, setMeals] = useState<Meal[]>(props.meals);
+  const [meals, setMeals] = useState<Meal[]>([]);
 
   useEffect(() => {
-    if (meals === undefined) return;
     setMeals(() => {
       return props.meals
         .map((meal) => {

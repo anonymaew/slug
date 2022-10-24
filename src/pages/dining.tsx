@@ -7,10 +7,9 @@ import DiningSelector from '../components/diningSelector';
 import { AllergenFilter, DefaultAllergens } from '../interfaces/allergenFilter';
 import { DiningLists, Location } from '../interfaces/diningList';
 import MainLayout from '../layouts/main';
-import diningList from '../lib/diningLists';
+import getDiningList from '../lib/getDiningList';
 
 const Page = (props: { data: DiningLists }) => {
-  const [day, setDay] = useState<string>("Today");
   const [location, setLocation] = useState<Location>(props.data.locations[0]);
   const [allergens, setAllergens] =
     useState<AllergenFilter[]>(DefaultAllergens);
@@ -24,9 +23,7 @@ const Page = (props: { data: DiningLists }) => {
         setLocation={setLocation}
       />
       <div className="flex justify-between px-4 mt-4 text-base font-bold sm:text-lg text-amber-900 dark:text-amber-100">
-        <span>
-          {location.days.find((dayItem) => dayItem.name === day)?.date || ""}
-        </span>
+        <span>{location.date}</span>
         <button
           className="underline rounded-full focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-amber-500 w-fit"
           onClick={() => setModalOpen(true)}
@@ -38,12 +35,7 @@ const Page = (props: { data: DiningLists }) => {
           }`}
         </button>
       </div>
-      <DiningMenu
-        meals={
-          location.days.find((dayItem) => dayItem.name === day)?.meals || []
-        }
-        filters={allergens}
-      />
+      <DiningMenu meals={location.meals} filters={allergens} />
       <AllergenFilterModal
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
@@ -59,7 +51,7 @@ const Page = (props: { data: DiningLists }) => {
 };
 
 export const getStaticProps = async () => {
-  const data = await diningList();
+  const data = await getDiningList();
 
   return {
     props: {

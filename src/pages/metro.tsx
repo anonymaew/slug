@@ -1,11 +1,10 @@
 import dynamic from 'next/dynamic';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import MetroSelector from '../components/metroSelector';
 import MetroStopDetail from '../components/metroStopDetail';
 import { Bus, MetroRouteDetail, StopDetail } from '../interfaces/metroLists';
-import MainLayout from '../layouts/main';
-import metroLists from '../lib/metroLists';
+import getMetroLists from '../lib/getMetroList';
 
 const MetroPage = (props: { routes: MetroRouteDetail[] }) => {
   const MetroMap = useMemo(
@@ -62,7 +61,7 @@ const MetroPage = (props: { routes: MetroRouteDetail[] }) => {
     getBuses();
     const interval = setInterval(async () => await getBuses(), 5000);
     return () => clearInterval(interval);
-  }, [selectedRoutes]);
+  }, [selectedRoutes, props.routes]);
 
   useEffect(() => {
     if (!stopFocus) return setStopDetail(undefined);
@@ -103,7 +102,7 @@ const MetroPage = (props: { routes: MetroRouteDetail[] }) => {
 };
 
 export const getStaticProps = async () => {
-  const routes = await metroLists();
+  const routes = await getMetroLists();
   return {
     props: {
       routes,

@@ -1,9 +1,9 @@
+import Image from 'next/image';
 import { Dispatch, SetStateAction } from 'react';
 
 import { Dialog, Switch } from '@headlessui/react';
 
 import { AllergenFilter } from '../interfaces/allergenFilter';
-import { Allergen } from '../interfaces/diningList';
 
 const AllergenFilter = (props: {
   data: AllergenFilter;
@@ -11,13 +11,16 @@ const AllergenFilter = (props: {
 }) => {
   return (
     <div className="flex items-center justify-between my-1">
-      <span className="">
-        <img
-          className="inline w-5 mx-3 aspect-square"
+      <span className="flex items-center pl-3">
+        <Image
+          width={20}
+          height={20}
           src={`/icons/${props.data.name}.gif`}
           alt={`${props.data.name} icon`}
         />
-        {props.data.name.charAt(0).toUpperCase() + props.data.name.slice(1)}
+        <span className="ml-3">
+          {props.data.name.charAt(0).toUpperCase() + props.data.name.slice(1)}
+        </span>
       </span>
       <Switch
         checked={props.data.checked}

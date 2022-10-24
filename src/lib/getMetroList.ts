@@ -47,10 +47,10 @@ import { MetroRouteDetail } from '../interfaces/metroLists';
 //   );
 // };
 
-const metroLists = async () => {
+const getMetroLists = async () => {
   const jsonPath = path.join(process.cwd(), "/src/lib/metro.json");
   const content = await fs.readFile(jsonPath, "utf-8");
   return JSON.parse(content);
 };
 
-export default metroLists;
+export default getMetroLists;

@@ -5,11 +5,6 @@ export interface DiningLists {
 
 export interface Location {
   name: string;
-  days: Day[];
-}
-
-export interface Day {
-  name: string;
   date: string;
   meals: Meal[];
 }
