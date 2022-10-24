@@ -4,7 +4,11 @@ import { useEffect, useState } from 'react';
 import { AllergenFilter } from '../interfaces/allergenFilter';
 import { Meal } from '../interfaces/diningList';
 
-const DiningMenu = (props: { meals: Meal[]; filters: AllergenFilter[] }) => {
+const DiningMenu = (props: {
+  meals: Meal[];
+  filters: AllergenFilter[];
+  loading: boolean;
+}) => {
   const [meals, setMeals] = useState<Meal[]>([]);
 
   useEffect(() => {
@@ -36,11 +40,15 @@ const DiningMenu = (props: { meals: Meal[]; filters: AllergenFilter[] }) => {
         })
         .filter((meal) => meal.categories.length > 0);
     });
-  }, [props]);
+  }, [props.meals, props.filters]);
 
   return (
     <div className="text-base sm:text-lg">
-      {meals.length === 0 ? (
+      {props.loading ? (
+        <p className="my-12 text-5xl font-black text-center animate-pulse text-zinc-500">
+          Loading
+        </p>
+      ) : meals.length === 0 ? (
         <p className="my-12 text-5xl font-black text-center text-zinc-500">
           No menu available
         </p>
@@ -51,7 +59,7 @@ const DiningMenu = (props: { meals: Meal[]; filters: AllergenFilter[] }) => {
               key={mealIndex}
               className="w-full p-2 pt-0 my-4 bg-white border rounded-lg shadow-md border-zinc-300 dark:bg-zinc-800 dark:border-zinc-700 sm:pt-2 sm:p-4"
             >
-              <h3 className="sticky my-2 text-lg font-bold text-center rounded-md shadow-sm sm:text-xl top-16 bg-amber-100 dark:bg-amber-900 text-amber-900 dark:text-amber-100">
+              <h3 className="sticky my-2 text-lg font-bold text-center rounded-md shadow-sm sm:text-xl top-28 bg-amber-100 dark:bg-amber-900 text-amber-900 dark:text-amber-100">
                 {meal.name}
               </h3>
               {meal.categories.map((category, categoryIndex) => {

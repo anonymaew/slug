@@ -1,4 +1,4 @@
-import cheerio from 'cheerio';
+import { load } from 'cheerio';
 
 import { Category, DiningLists, Location, Meal, Menu } from '../interfaces/diningList';
 
@@ -33,19 +33,27 @@ const fetchContent = async (url: string) => {
   return content;
 };
 
-const getDiningList = async (): Promise<DiningLists> => {
+const getDiningList = async (date?: Date): Promise<DiningLists> => {
   try {
     const locationsContent = await fetchContent(homePageLink);
-    const $m = cheerio.load(locationsContent);
+    const $m = load(locationsContent);
 
     const locations = $m(".locations")
       .toArray()
       .map(async (locationElement, i) => {
         const aTag = $m(locationElement).find("a");
         const locationName = aTag.text();
-        const locationLink = domain + aTag.attr("href");
+
+        const query = date
+          ? `&WeeksMenus=UCSC+-+This+Week%27s+Menus&myaction=read&dtdate=${
+              date.getMonth() + 1
+            }%2f${date.getDate()}%2f${date.getFullYear()}`
+          : "";
+        const locationLink = domain + aTag.attr("href") + query;
+        console.log(locationLink);
+
         const locationContent = await fetchContent(locationLink);
-        const $ = cheerio.load(locationContent);
+        const $ = load(locationContent);
 
         return {
           name: locationName,

@@ -9,7 +9,7 @@
 2. [UCSC Dining Menu](https://slug.napatsc.com/dining): Quick menu lookup for all UCSC dining halls.
    - Quick lookup between all dining halls.
    - Allergen filter for those with allergies.
-   - (implementing) Look up for menu ahead of time, or in the past!
+   - Look up for menu ahead of time, or in the past!
 
 ### Why
 
@@ -22,5 +22,5 @@
    - scraping every dining hall's menus today from [the website](https://nutrition.sa.ucsc.edu/location.aspx) generating a page based on the menu
    - getting all bus waypoints and stops data from [the website's API](https://cruzmetro.com/map/) (there is no official one, but look at the network tab!)
 2. Static pages are served along with Next.js API calls
-   - (implementing) calling API more for looking up the menu other than today
+   - calling API more for looking up the menu other than today
    - getting every bus's live location from [the website's API](https://cruzmetro.com/map/) and updating every 5 seconds
