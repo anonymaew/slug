@@ -50,7 +50,6 @@ const getDiningList = async (date?: Date): Promise<DiningLists> => {
             }%2f${date.getDate()}%2f${date.getFullYear()}`
           : "";
         const locationLink = domain + aTag.attr("href") + query;
-        console.log(locationLink);
 
         const locationContent = await fetchContent(locationLink);
         const $ = load(locationContent);
