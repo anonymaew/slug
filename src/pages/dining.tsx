@@ -36,7 +36,7 @@ const Page = (props: { data: DiningLists }) => {
         setDiningList(data);
         setLoading(false);
       })();
-  }, [date]);
+  }, [date, props.data]);
 
   return (
     <MainLayout>

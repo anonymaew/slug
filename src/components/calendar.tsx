@@ -5,7 +5,7 @@ import DatePicker from 'react-datepicker';
 
 import { CalendarIcon } from '@heroicons/react/24/solid';
 
-const Wrapper = forwardRef<HTMLButtonElement>(
+const Wrapper = forwardRef<HTMLButtonElement | null>(
   (props: ButtonHTMLAttributes<HTMLButtonElement>, ref) => (
     <button
       className="flex flex-row items-center bg-transparent rounded-md focus:outline-none focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
@@ -17,6 +17,8 @@ const Wrapper = forwardRef<HTMLButtonElement>(
     </button>
   )
 );
+
+Wrapper.displayName = "Wrapper";
 
 const Calendar = (props: {
   date: Date;
