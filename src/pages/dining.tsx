@@ -49,7 +49,6 @@ const Page = (props: { data: DiningLists }) => {
         setDate={setDate}
         allergens={allergens}
       />
-      <div className="flex justify-between px-4 mt-4 text-base font-bold sm:text-lg text-amber-900 dark:text-amber-100"></div>
       <DiningMenu meals={meals} filters={allergens} loading={loading} />
       <AllergenFilterModal
         modalOpen={modalOpen}

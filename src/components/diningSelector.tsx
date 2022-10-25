@@ -24,7 +24,7 @@ const DiningSelector = (props: {
           <ChevronDownIcon className="w-5 h-5"></ChevronDownIcon>
         </span>
       </Listbox.Button>
-      <Listbox.Options className="absolute w-full mt-2 text-base bg-white border-black rounded-md shadow-lg dark:bg-zinc-700 border-1 border-opacity-10 focus:outline-none">
+      <Listbox.Options className="absolute z-10 w-full mt-2 text-base bg-white border-black rounded-md shadow-lg dark:bg-zinc-700 border-1 border-opacity-10 focus:outline-none">
         {props.data.locations
           .map((_, index) => index)
           .filter((_, index) => index !== props.location)
