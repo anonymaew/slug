@@ -15,7 +15,7 @@ const AllergenFilter = (props: {
         <Image
           width={20}
           height={20}
-          src={`/icons/${props.data.name}.gif`}
+          src={`/allergen-icons/${props.data.name}.gif`}
           alt={`${props.data.name} icon`}
         />
         <span className="ml-3">
