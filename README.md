@@ -2,6 +2,8 @@
 
 [Web application](https://slug.napatsc.com) for live metro map and UCSC dining menu.
 
+[![web applications on phone](https://user-images.githubusercontent.com/31605937/218241687-7e5c4353-66c8-44e7-a2a9-eb37f409555c.png)](https://slug.napatsc.com)
+
 ### What
 
 1. [Live Metro Map](https://slug.napatsc.com/metro): Real-time Santa Cruz metro map, including all bus lines going through UCSC, and other lines too!
