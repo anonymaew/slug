@@ -2,12 +2,12 @@ import { Dispatch, SetStateAction } from 'react';
 
 import { XMarkIcon } from '@heroicons/react/24/solid';
 
-import { MetroRouteDetail, StopDetail } from '../interfaces/metroLists';
+import { RouteDetail, StopDetail } from '../interfaces/metroLists';
 
 const MetroStopDetail = (props: {
-  routes: MetroRouteDetail[];
+  routes: RouteDetail[];
   stopDetail: StopDetail;
-  setStopFocus: Dispatch<SetStateAction<number | undefined>>;
+  setStopFocus: Dispatch<SetStateAction<string | undefined>>;
 }) => {
   return (
     <div className="fixed w-screen p-2 text-base text-black bottom-10 dark:text-white sm:text-lg">
@@ -39,7 +39,7 @@ const MetroStopDetail = (props: {
                 >
                   <div>
                     <div className="inline-block w-16 py-1 mr-4 font-bold text-center text-indigo-100 bg-indigo-900 rounded-md dark:bg-indigo-100 dark:text-indigo-900">
-                      {arrival.bus.name}
+                      {arrival.bus.route}
                     </div>
                     <span>
                       {/* hour minute */}
@@ -64,6 +64,7 @@ const MetroStopDetail = (props: {
                     {new Date(
                       Date.now() + arrival.minutes * 60000
                     ).toLocaleTimeString("en-US", {
+                      timeZone: "America/Los_Angeles",
                       hour: "numeric",
                       minute: "2-digit",
                       hour12: true,

@@ -3,21 +3,20 @@ import 'leaflet/dist/leaflet.css';
 import L, { divIcon } from 'leaflet';
 import { renderToHTML } from 'next/dist/server/render';
 import React, { Dispatch, Fragment, SetStateAction, useEffect } from 'react';
-import { render } from 'react-dom';
 import { renderToString } from 'react-dom/server';
 import {
     CircleMarker, MapContainer, Marker, Polyline, TileLayer, ZoomControl
 } from 'react-leaflet';
 import { LeafletTrackingMarker } from 'react-leaflet-tracking-marker';
 
-import { Bus, MetroRouteDetail } from '../interfaces/metroLists';
+import { Bus, RouteDetail } from '../interfaces/metroLists';
 
 const MetroMap = (props: {
   selectedRoutes: number[];
-  metroRoutesDetail: MetroRouteDetail[];
-  metroBuses: Bus[];
-  stopFocus: number | undefined;
-  setStopFocus: Dispatch<SetStateAction<number | undefined>>;
+  routesDetail: RouteDetail[];
+  buses: Bus[];
+  stopFocus: string | undefined;
+  setStopFocus: Dispatch<SetStateAction<string | undefined>>;
 }) => {
   return (
     <div className="fixed top-0 left-0 w-screen h-screen">
@@ -29,11 +28,11 @@ const MetroMap = (props: {
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution="Map from <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> | Live data from <a href='https://cruzmetro.com'>CruzMetro</a><p style='text-align:right;'>Available at <a href='https://github.com/anonymaew/ucsc-dining-menu'>GitHub</a> | Made by <a href='https://napatsc.com'>Napat Srichan</a></p>"
+          attribution="Map from <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> | Live data from <a href='https://rt.scmetro.org'>Santa Cruz Metro</a><p style='text-align:right;'>Available at <a href='https://github.com/anonymaew/ucsc-dining-menu'>GitHub</a> | Made by <a href='https://napatsc.com'>Napat Srichan</a></p>"
         />
-        {props.metroRoutesDetail
+        {props.routesDetail
           .filter((_, index) => props.selectedRoutes.includes(index))
-          .map((metroRouteDetail, index) => {
+          .map((routeDetail, index) => {
             return (
               <Fragment key={index}>
                 <Polyline
@@ -42,9 +41,9 @@ const MetroMap = (props: {
                     weight: 8,
                   }}
                   positions={
-                    metroRouteDetail.waypoints.map((waypoint) => [
+                    routeDetail.waypoints.map((waypoint) => [
                       waypoint.lat,
-                      waypoint.lng,
+                      waypoint.lon,
                     ]) || []
                   }
                 />
@@ -54,26 +53,26 @@ const MetroMap = (props: {
                     weight: 4,
                   }}
                   positions={
-                    metroRouteDetail.waypoints.map((waypoint) => [
+                    routeDetail.waypoints.map((waypoint) => [
                       waypoint.lat,
-                      waypoint.lng,
+                      waypoint.lon,
                     ]) || []
                   }
                 />
               </Fragment>
             );
           })}
-        {props.metroRoutesDetail
+        {props.routesDetail
           .filter((_, index) => props.selectedRoutes.includes(index))
-          .flatMap((metroRouteDetail) => metroRouteDetail.stops)
+          .flatMap((routeDetail) => routeDetail.stops)
           .reduce((acc, stop) => {
             if (acc.some((stop2) => stop2.id === stop.id)) return acc;
             else return [...acc, stop];
-          }, [] as typeof props.metroRoutesDetail[0]["stops"])
+          }, [] as typeof props.routesDetail[0]["stops"])
           .map((stopItem) => (
             <CircleMarker
               key={stopItem.id}
-              center={[stopItem.position.lat, stopItem.position.lng]}
+              center={[stopItem.position.lat, stopItem.position.lon]}
               pathOptions={{
                 fillColor:
                   props.stopFocus === stopItem.id ? "#fbbf24" : "#818cf8",
@@ -89,13 +88,13 @@ const MetroMap = (props: {
               }}
             />
           ))}
-        {props.metroBuses.map((busItem) => (
+        {props.buses.map((busItem) => (
           <Fragment key={busItem.id}>
             <LeafletTrackingMarker
-              position={[busItem.position.lat, busItem.position.lng]}
+              position={[busItem.position.lat, busItem.position.lon]}
               previousPosition={
                 busItem.prevPosition
-                  ? [busItem.prevPosition.lat, busItem.prevPosition.lng]
+                  ? [busItem.prevPosition.lat, busItem.prevPosition.lon]
                   : undefined
               }
               duration={5000}
@@ -116,10 +115,10 @@ const MetroMap = (props: {
               zIndexOffset={10}
             />
             <LeafletTrackingMarker
-              position={[busItem.position.lat, busItem.position.lng]}
+              position={[busItem.position.lat, busItem.position.lon]}
               previousPosition={
                 busItem.prevPosition
-                  ? [busItem.prevPosition.lat, busItem.prevPosition.lng]
+                  ? [busItem.prevPosition.lat, busItem.prevPosition.lon]
                   : undefined
               }
               duration={5000}
@@ -128,7 +127,7 @@ const MetroMap = (props: {
                   className: "bus-icon-text",
                   html: renderToString(
                     <div className="w-8 pt-2 text-xs font-black text-center text-indigo-900 aspect-square">
-                      {busItem.name}
+                      {busItem.route}
                     </div>
                   ),
                   iconSize: [32, 32],

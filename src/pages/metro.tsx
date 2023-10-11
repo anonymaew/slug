@@ -3,10 +3,10 @@ import { useEffect, useMemo, useState } from 'react';
 
 import MetroSelector from '../components/metroSelector';
 import MetroStopDetail from '../components/metroStopDetail';
-import { Bus, MetroRouteDetail, StopDetail } from '../interfaces/metroLists';
-import getMetroLists from '../lib/getMetroList';
+import { Bus, RouteDetail, StopDetail } from '../interfaces/metroLists';
+import getMetroLists from '../lib/metro/getMetroList';
 
-const MetroPage = (props: { routes: MetroRouteDetail[] }) => {
+const MetroPage = (props: { routes: RouteDetail[] }) => {
   const MetroMap = useMemo(
     () =>
       dynamic(() => import("../components/metroMap"), {
@@ -16,29 +16,17 @@ const MetroPage = (props: { routes: MetroRouteDetail[] }) => {
     []
   );
 
-  // useEffect(() => {
-  //   //download props.routes json
-  //   const string = JSON.stringify(props.routes);
-  //   var blob = new Blob([string], { type: "application/json" });
-  //   var url = URL.createObjectURL(blob);
-  //   var a = document.createElement("a");
-  //   a.download = "routes.json";
-  //   a.href = url;
-  //   a.textContent = "Download routes.json";
-  //   a.click();
-  // }, []);
-
   const [selectedRoutes, setSelectedRoutes] = useState<number[]>([
-    1, 2, 4, 5, 6,
+    2, 3, 5, 6, 7
   ]);
   const [buses, setBuses] = useState<Bus[]>([]);
-  const [stopFocus, setStopFocus] = useState<number>();
+  const [stopFocus, setStopFocus] = useState<string>();
   const [stopDetail, setStopDetail] = useState<StopDetail>();
 
   useEffect(() => {
     const getBuses = async () => {
       const busesQuery = selectedRoutes
-        .map((routeIndex) => props.routes[routeIndex].id)
+        .map((routeIndex) => props.routes[routeIndex].name)
         .join(",");
       const busesResponse = await fetch(`/api/metro/bus?ids=${busesQuery}`);
       const busesData = await busesResponse.json();
@@ -49,9 +37,9 @@ const MetroPage = (props: { routes: MetroRouteDetail[] }) => {
           );
           if (prevBusItem) bus.prevPosition = prevBusItem.position;
           const route = props.routes.find(
-            (route) => route.id === parseInt(bus.route)
+            (route) => route.name === bus.route
           );
-          if (route) bus.name = route.name;
+          if (route) bus.route = route.name;
           return bus;
         });
         return newBus;
@@ -85,8 +73,8 @@ const MetroPage = (props: { routes: MetroRouteDetail[] }) => {
       />
       <MetroMap
         selectedRoutes={selectedRoutes}
-        metroRoutesDetail={props.routes}
-        metroBuses={buses}
+        routesDetail={props.routes}
+        buses={buses}
         stopFocus={stopFocus}
         setStopFocus={setStopFocus}
       />

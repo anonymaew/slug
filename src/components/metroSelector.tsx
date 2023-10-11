@@ -2,10 +2,10 @@ import { Dispatch, SetStateAction } from 'react';
 
 import { Switch } from '@headlessui/react';
 
-import { MetroRouteDetail } from '../interfaces/metroLists';
+import { RouteDetail } from '../interfaces/metroLists';
 
 const MetroSelector = (props: {
-  data: MetroRouteDetail[];
+  data: RouteDetail[];
   selectedRoutes: number[];
   setSelectedRoutes: Dispatch<SetStateAction<number[]>>;
 }) => {
@@ -13,7 +13,7 @@ const MetroSelector = (props: {
     <div className="fixed top-0 left-0 z-10 w-full p-4 overflow-auto no-scrollbar">
       <div className="flex flex-row mx-auto w-fit">
         {props.data.map((route, index) => (
-          <div key={route.id} className="">
+          <div key={route.name} className="">
             <Switch
               as="button"
               checked={props.selectedRoutes.includes(index)}
